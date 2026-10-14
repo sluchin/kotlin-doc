@@ -5,6 +5,7 @@
  */
 
 import type { SiteProfile } from "../shared/ts/lib/profile";
+import { parseToc } from "./toc";
 
 /** Kotlin のドキュメント (kotlinlang.org/docs) の設定. 本文は article.article. */
 export const site: SiteProfile = {
@@ -16,4 +17,6 @@ export const site: SiteProfile = {
   contentSelectors: ["article.article"],
   removeSelectors: [],
   titleSuffix: / \| Kotlin Documentation$/,
+  // 目次 (ページの左のメニュー) は、JavaScript で描かれるので、サイトの JSON から読む
+  menu: { type: "json", url: "https://kotlinlang.org/docs/HelpTOC.json", parse: parseToc },
 };
