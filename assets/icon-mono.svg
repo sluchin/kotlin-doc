@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- テーマアイコン (単色) -->
+  <path d="M330 320 H420 V480 L580 320 H700 L520 500 L710 700 H590 L420 520 V700 H330 Z" fill="#ffffff"/>
+  <circle cx="690" cy="690" r="124" fill="#ffffff"/>
+  <g fill="none" stroke="#000000" stroke-width="15" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M690 616 V630"/>
+    <path d="M644 644 H736"/>
+    <path d="M682 648 C 676 684 654 714 626 736"/>
+    <path d="M646 666 C 674 682 704 704 738 738"/>
+  </g>
+</svg>
