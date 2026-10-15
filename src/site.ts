@@ -16,6 +16,8 @@ export const site: SiteProfile = {
   homeUrl: "https://kotlinlang.org/docs/getting-started.html",
   contentSelectors: ["article.article"],
   removeSelectors: [],
+  // コードの //sampleStart と //sampleEnd は、サイトの JavaScript が隠す印 (試せる部分の範囲)
+  dropCodeLines: /^\s*\/\/sample(Start|End)\s*$/,
   titleSuffix: / \| Kotlin Documentation$/,
   // 目次 (ページの左のメニュー) は、JavaScript で描かれるので、サイトの JSON から読む
   menu: { type: "json", url: "https://kotlinlang.org/docs/HelpTOC.json", parse: parseToc },

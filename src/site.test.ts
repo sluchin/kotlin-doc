@@ -15,7 +15,13 @@ const PAGE = `<html><head><title>Sample | Kotlin Documentation</title></head><bo
 <header>Menu</header>
 <main><article class="article"><h1 id="s">Sample</h1>
 <p>Call <code class="code">main</code> to start.</p>
-<div class="code-block" data-lang="kotlin">fun main() { println("x") }</div>
+<div class="code-block" data-lang="kotlin">
+fun main() {
+//sampleStart
+    println("x")
+//sampleEnd
+}
+</div>
 <p>See <a href="other.html">Other</a>.</p></article></main></body></html>`;
 
 describe("Kotlin site profile", () => {
@@ -30,6 +36,12 @@ describe("Kotlin site profile", () => {
     expect(page.title).toBe("Sample");
     expect(page.html).not.toContain("Menu");
     expect(page.html).toContain('href="https://kotlinlang.org/docs/other.html"');
+  });
+
+  it("keeps the line breaks of the code and drops the markers of the samples", () => {
+    const { html } = extractPage(PAGE, site.homeUrl, site);
+    expect(html).toContain('fun main() {\n    println("x")\n}</div>');
+    expect(html).not.toContain("sampleStart");
   });
 
   it("does not translate the code blocks", () => {
