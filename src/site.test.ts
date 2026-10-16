@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 import { isDocUrl } from "../shared/ts/lib/docUrl";
 import { extractPage } from "../shared/ts/lib/extract";
 import { collectSegments } from "../shared/ts/lib/segments";
+import { versionFromText } from "../shared/ts/lib/version";
 import { site } from "./site";
 
 /** 作り物の Kotlin のドキュメント風のページ (ドキュメントの文章は使わない). */
@@ -49,5 +50,15 @@ describe("Kotlin site profile", () => {
     root.innerHTML = extractPage(PAGE, site.homeUrl, site).html;
     const texts = collectSegments(root).map((element) => element.textContent);
     expect(texts).toEqual(["Sample", "Call main to start.", "See Other."]);
+  });
+
+  it("reads the current Kotlin version to separate the cache", () => {
+    const source = site.versionSource;
+    expect(source?.url.startsWith("https://kotlinlang.org/docs/")).toBe(true);
+    // 作り物の, 最初のページの一部 (サイトは, 属性の中に, エスケープした HTML で書く)
+    const text =
+      '<div data-content="{&quot;x&quot;:[&quot;\\u003cp\\u003eLatest Kotlin release: \\u003ca href\\u003d\\&quot;whatsnew2420.html\\&quot;\\u003e2.4.21\\u003c/a\\u003e&quot;]}"></div>';
+    expect(versionFromText(text, source?.pattern as RegExp)).toBe("2.4.21");
+    expect(versionFromText("<p>no release</p>", source?.pattern as RegExp)).toBeUndefined();
   });
 });
