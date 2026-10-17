@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { isDocUrl } from "../shared/ts/lib/docUrl";
+import { isDocUrl, tabIndexOf } from "../shared/ts/lib/docUrl";
 import { extractPage } from "../shared/ts/lib/extract";
 import { collectSegments } from "../shared/ts/lib/segments";
 import { versionFromText } from "../shared/ts/lib/version";
@@ -26,10 +26,48 @@ fun main() {
 <p>See <a href="other.html">Other</a>.</p></article></main></body></html>`;
 
 describe("Kotlin site profile", () => {
-  it("opens only the docs of the site, starting from a page that the server renders", () => {
+  it("opens the docs and the API of the site in the tabs, starting from a page that the server renders", () => {
     expect(isDocUrl(site.homeUrl, site)).toBe(true);
-    expect(isDocUrl("https://kotlinlang.org/api/latest/jvm/stdlib/", site)).toBe(false);
+    expect(site.tabs?.map((tab) => tab.label)).toEqual(["Docs", "Stdlib"]);
+    for (const tab of site.tabs ?? []) {
+      expect(isDocUrl(tab.homeUrl, site)).toBe(true);
+    }
+    expect(tabIndexOf("https://kotlinlang.org/docs/a.html", site.tabs ?? [])).toBe(0);
+    // 古い URL (転送のページ) も、新しい URL も、API のタブ
+    expect(tabIndexOf("https://kotlinlang.org/api/latest/jvm/stdlib/", site.tabs ?? [])).toBe(1);
+    expect(tabIndexOf("https://kotlinlang.org/api/core/kotlin-stdlib/", site.tabs ?? [])).toBe(1);
+    expect(isDocUrl("https://kotlinlang.org/community/", site)).toBe(false);
     expect(isDocUrl("https://example.com/docs/a.html", site)).toBe(false);
+  });
+
+  it("follows the redirect page of the old API url", () => {
+    const stub = `<noscript><meta http-equiv="refresh" content="0; url=/api/core/kotlin-stdlib/"/></noscript>
+<script>window.location = '/api/core/kotlin-stdlib/' + window.location.hash;</script>`;
+    const page = extractPage(stub, "https://kotlinlang.org/api/latest/jvm/stdlib/", site);
+    expect(page.redirect).toBe("https://kotlinlang.org/api/core/kotlin-stdlib/");
+    expect(isDocUrl(page.redirect as string, site)).toBe(true);
+  });
+
+  it("takes the main content of the API page and does not translate the declarations", () => {
+    const api = `<html><head><title>listOf | Core API – Kotlin Programming Language</title></head><body>
+<div id="main"><div class="main-content"><div class="breadcrumbs"><a href="../index.html">kotlin-stdlib</a></div>
+<div class="cover"><h1 class="cover"><span>list</span><wbr><span>Of</span></h1></div>
+<div class="symbol monospace">fun &lt;T&gt; listOf(): List&lt;T&gt;<span class="copy-popup-wrapper">Copy</span></div>
+<p class="paragraph">Returns an empty read-only list.</p>
+<div class="main-subrow"><a href="list.html">List</a><span class="anchor-wrapper">#</span></div>
+</div></div></body></html>`;
+    const page = extractPage(
+      api,
+      "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/list-of.html",
+      site,
+    );
+    expect(page.title).toBe("listOf");
+    expect(page.html).not.toContain("Copy");
+    expect(page.html).not.toContain(">#<");
+    const doc = new DOMParser().parseFromString(`<div>${page.html}</div>`, "text/html");
+    const texts = collectSegments(doc.body.firstElementChild as Element).map((e) => e.textContent);
+    // 説明の文だけを翻訳する (宣言、名前、パンくず、見出しの名前は、翻訳しない)
+    expect(texts).toEqual(["Returns an empty read-only list."]);
   });
 
   it("takes the article, strips the site name, and makes the links absolute", () => {
