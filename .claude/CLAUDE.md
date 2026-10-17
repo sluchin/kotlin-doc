@@ -53,7 +53,7 @@ Kotlin のドキュメント (https://kotlinlang.org/docs/) をリンクを開�
 
 - 版: URL に版はない (`/docs/2.1/...` は 404)。`SiteProfile.versionSource` で、`getting-started.html` の「Latest Kotlin release」(属性の中の、エスケープした HTML) から、今の版を読み取って、翻訳のキャッシュを版ごとに分ける (版は選べない)。読み取れなければ、版で分けない。
 
-- タブ: 「Docs」(`/docs/`. 目次は HelpTOC.json) と「Stdlib」(`/api/`. Dokka で作られた標準ライブラリの API. 本文は `.main-content`)。Stdlib の左のメニューは、`/api/core/navigation.html` (約 1.2 MB. `div.toc--part` の入れ子で、`ul` ではない) にあるが、まだ読まない (☰ は出ない)。
+- 開くパス: `/docs/` と、`otherPathPrefixes` の `/api/` (Dokka で作られた標準ライブラリの API. 本文は `.main-content`)。タブは使わない (利用者の希望)。メニューは、ドキュメントの目次 (HelpTOC.json) だけ。API の目次は `/api/core/navigation.html` (約 1.2 MB. `div.toc--part` の入れ子で、`ul` ではない) にあるが、読まない。
 - 古い API の URL (`/api/latest/jvm/stdlib/...`) は、`<meta http-equiv="refresh">` の転送のページ。共通のコードが、移り先 (`/api/core/...`) をたどる。
 - API のページの、宣言 (`.symbol`)、名前の行 (`.main-subrow`)、パンくず、対応する環境の印、見出しの名前は、`noTranslateSelectors` で、翻訳しない。
 

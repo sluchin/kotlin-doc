@@ -7,23 +7,19 @@
 import type { SiteProfile } from "../shared/ts/lib/profile";
 import { parseToc } from "./toc";
 
-/** Kotlin のドキュメント (`/docs/`) の, 目次の JSON. */
-const DOCS_MENU = {
-  type: "json" as const,
-  url: "https://kotlinlang.org/docs/HelpTOC.json",
-  parse: parseToc,
-};
-
 /**
  * Kotlin のドキュメント (kotlinlang.org) の設定.
  *
- * 画面の上のタブで, ドキュメント (`/docs/`. 本文は article.article) と, 標準ライブラリの API (`/api/`.
- * Dokka で作られている. 本文は .main-content) を切り替える.
+ * ドキュメント (`/docs/`. 本文は article.article) と, 標準ライブラリの API (`/api/`. Dokka で作られている.
+ * 本文は .main-content) を開く (タブは使わない. メニューは, ドキュメントの目次).
  */
 export const site: SiteProfile = {
   name: "Kotlin Doc",
   host: "kotlinlang.org",
   pathPrefix: "/docs/",
+  // 標準ライブラリの API (`/api/`. Dokka で作られている) も、アプリの中で開く (ドキュメントのリンクから入る).
+  // 古い URL (`/api/latest/jvm/stdlib/...`) は、転送のページで、新しい URL (`/api/core/...`) に移る (アプリも、たどる)
+  otherPathPrefixes: ["/api/"],
   // home.html は JavaScript で描かれるので、サーバーが本文を返す、最初のページを開く
   homeUrl: "https://kotlinlang.org/docs/getting-started.html",
   contentSelectors: ["article.article", ".main-content"],
@@ -42,21 +38,7 @@ export const site: SiteProfile = {
   dropCodeLines: /^\s*\/\/sample(Start|End)\s*$/,
   titleSuffix: / \| (Kotlin Documentation|Core API – Kotlin Programming Language)$/,
   // 目次 (ページの左のメニュー) は、JavaScript で描かれるので、サイトの JSON から読む
-  menu: DOCS_MENU,
-  tabs: [
-    {
-      label: "Docs",
-      pathPrefix: "/docs/",
-      homeUrl: "https://kotlinlang.org/docs/getting-started.html",
-      menu: DOCS_MENU,
-    },
-    // 古い URL (`/api/latest/jvm/stdlib/...`) は、転送のページで、新しい URL (`/api/core/...`) に移る (アプリも、たどる)
-    {
-      label: "Stdlib",
-      pathPrefix: "/api/",
-      homeUrl: "https://kotlinlang.org/api/core/kotlin-stdlib/",
-    },
-  ],
+  menu: { type: "json", url: "https://kotlinlang.org/docs/HelpTOC.json", parse: parseToc },
   // URL に版はない (いつも最新の Kotlin のドキュメント). 最初のページの「Latest Kotlin release」から、今の版を読み取って、
   // 翻訳のキャッシュを、版ごとに分ける (版は選べない. Kotlin の版が上がったら、新しく翻訳する)
   versionSource: {

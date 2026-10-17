@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { isDocUrl, tabIndexOf } from "../shared/ts/lib/docUrl";
+import { isDocUrl } from "../shared/ts/lib/docUrl";
 import { extractPage } from "../shared/ts/lib/extract";
 import { collectSegments } from "../shared/ts/lib/segments";
 import { versionFromText } from "../shared/ts/lib/version";
@@ -26,16 +26,12 @@ fun main() {
 <p>See <a href="other.html">Other</a>.</p></article></main></body></html>`;
 
 describe("Kotlin site profile", () => {
-  it("opens the docs and the API of the site in the tabs, starting from a page that the server renders", () => {
+  it("opens the docs and the API of the site, starting from a page that the server renders", () => {
     expect(isDocUrl(site.homeUrl, site)).toBe(true);
-    expect(site.tabs?.map((tab) => tab.label)).toEqual(["Docs", "Stdlib"]);
-    for (const tab of site.tabs ?? []) {
-      expect(isDocUrl(tab.homeUrl, site)).toBe(true);
-    }
-    expect(tabIndexOf("https://kotlinlang.org/docs/a.html", site.tabs ?? [])).toBe(0);
-    // 古い URL (転送のページ) も、新しい URL も、API のタブ
-    expect(tabIndexOf("https://kotlinlang.org/api/latest/jvm/stdlib/", site.tabs ?? [])).toBe(1);
-    expect(tabIndexOf("https://kotlinlang.org/api/core/kotlin-stdlib/", site.tabs ?? [])).toBe(1);
+    expect(site.tabs).toBeUndefined();
+    expect(isDocUrl("https://kotlinlang.org/api/core/kotlin-stdlib/", site)).toBe(true);
+    // 古い URL (転送のページ) も、アプリで開いて、たどる
+    expect(isDocUrl("https://kotlinlang.org/api/latest/jvm/stdlib/", site)).toBe(true);
     expect(isDocUrl("https://kotlinlang.org/community/", site)).toBe(false);
     expect(isDocUrl("https://example.com/docs/a.html", site)).toBe(false);
   });
