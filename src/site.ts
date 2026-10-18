@@ -39,6 +39,8 @@ export const site: SiteProfile = {
   titleSuffix: / \| (Kotlin Documentation|Core API – Kotlin Programming Language)$/,
   // 目次 (ページの左のメニュー) は、JavaScript で描かれるので、サイトの JSON から読む
   menu: { type: "json", url: "https://kotlinlang.org/docs/HelpTOC.json", parse: parseToc },
+  // サイトの見た目で表示するとき、サイトの JavaScript は動かさないので、描き終えなかったときの表示 (本文を隠さない) にする
+  siteLookBodyClass: "app-render-failed",
   // URL に版はない (いつも最新の Kotlin のドキュメント). 最初のページの「Latest Kotlin release」から、今の版を読み取って、
   // 翻訳のキャッシュを、版ごとに分ける (版は選べない. Kotlin の版が上がったら、新しく翻訳する)
   versionSource: {
