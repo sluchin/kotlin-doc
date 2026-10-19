@@ -46,6 +46,7 @@ Kotlin のドキュメント (https://kotlinlang.org/docs/) をリンクを開�
 ## Kotlin のドキュメントの作り (サイト固有)
 
 - 本文は `article.article`。コードのブロックは `div.code-block` (中身はプレーンテキスト。`data-runnable` の「実行」の機能は JavaScript なので、使えない)、文中のコードは `code.code`。共通のコードが `code-block` と `code` を翻訳しない。
+- サイトの見た目: サイトの CSS は、JavaScript が組み直した本文に当たる (注意書きは `div.prompt__wrapper--type-<種類>` の中、段落は `p.article__p`)。`src/writerside.ts` の `rewriteWriterside` (`siteLookRewrite`) で、同じ形に組み直す。
 - 開くのは `https://kotlinlang.org/docs/` だけ (`pathPrefix`)。`/api/` などはブラウザで開く。
 - 最初のページは `getting-started.html` (`home.html` は JavaScript で描かれる)。左のメニュー (目次) は HTML にないので、出ない。前へと次への、リンクはある。
 - アイコンはオリジナル (青緑の K と「文」)。**JetBrains と Kotlin のロゴを使わない。**

@@ -6,6 +6,7 @@
 
 import type { SiteProfile } from "../shared/ts/lib/profile";
 import { parseToc } from "./toc";
+import { rewriteWriterside } from "./writerside";
 
 /**
  * Kotlin のドキュメント (kotlinlang.org) の設定.
@@ -41,6 +42,8 @@ export const site: SiteProfile = {
   menu: { type: "json", url: "https://kotlinlang.org/docs/HelpTOC.json", parse: parseToc },
   // サイトの見た目で表示するとき、サイトの JavaScript は動かさないので、描き終えなかったときの表示 (本文を隠さない) にする
   siteLookBodyClass: "app-render-failed",
+  // サイトの CSS は、JavaScript が組み直した本文 (注意書きの枠など) に当たるので、同じ形に組み直す
+  siteLookRewrite: rewriteWriterside,
   // URL に版はない (いつも最新の Kotlin のドキュメント). 最初のページの「Latest Kotlin release」から、今の版を読み取って、
   // 翻訳のキャッシュを、版ごとに分ける (版は選べない. Kotlin の版が上がったら、新しく翻訳する)
   versionSource: {
