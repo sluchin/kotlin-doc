@@ -23,6 +23,11 @@ fun main() {
 //sampleEnd
 }
 </div>
+<div class="code-collapse" data-lang="kotlin" data-synopsis="Example solution">
+fun main() {
+    println("y")
+}
+</div>
 <p>See <a href="other.html">Other</a>.</p></article></main></body></html>`;
 
 describe("Kotlin site profile", () => {
