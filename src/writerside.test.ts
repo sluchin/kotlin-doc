@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from "vitest";
 import { site } from "./site";
-import { rewriteWriterside } from "./writerside";
+import { foldExpandables, rewriteWriterside } from "./writerside";
 
 /**
  * 作り物の本文を組み直す (ドキュメントの文章は使わない).
@@ -52,5 +52,49 @@ describe("rewriteWriterside", () => {
       "prompt__wrapper prompt__wrapper--type-note",
     );
     expect(content.lastElementChild?.innerHTML).toBe("Other.");
+  });
+});
+
+describe("foldExpandables", () => {
+  /**
+   * 作り物の本文の, 畳める項目を組み直す.
+   *
+   * @param html 本文の HTML
+   * @returns 組み直した本文
+   */
+  function fold(html: string): Element {
+    const content = document.createElement("article");
+    content.innerHTML = html;
+    foldExpandables(content);
+    return content;
+  }
+
+  it("is the rewrite of the Kotlin site", () => {
+    expect(site.rewrite).toBe(foldExpandables);
+  });
+
+  it("folds the expandable items and the hints inside them", () => {
+    const content = fold(
+      '<dl><dt id="t1" data-expandable="true" data-expanded="false">Task <code>x</code></dt>' +
+        '<dd><p>Body.</p><dl><dt data-expandable="true" data-expanded="true">Hint</dt><dd>Tip.</dd></dl></dd>' +
+        '<dt data-expandable="true">Last</dt></dl><dl><dt>Term</dt><dd>Plain.</dd></dl>',
+    );
+    expect(content.innerHTML).toBe(
+      '<dl><details id="t1"><summary>Task <code>x</code></summary><p>Body.</p>' +
+        '<dl><details open=""><summary>Hint</summary>Tip.</details></dl></details>' +
+        "<details><summary>Last</summary></details></dl><dl><dt>Term</dt><dd>Plain.</dd></dl>",
+    );
+  });
+
+  it("folds the collapsible code under its synopsis", () => {
+    const content = fold(
+      '<div class="code-collapse" id="c1" data-synopsis="Answer" data-is-expanded="true">a()</div>' +
+        '<div class="code-collapse" data-is-expanded="false">b()</div>',
+    );
+    expect(content.innerHTML).toBe(
+      '<details id="c1" open=""><summary>Answer</summary>' +
+        '<div class="code-collapse" data-synopsis="Answer" data-is-expanded="true">a()</div></details>' +
+        '<details><summary>Code</summary><div class="code-collapse" data-is-expanded="false">b()</div></details>',
+    );
   });
 });

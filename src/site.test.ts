@@ -88,7 +88,25 @@ describe("Kotlin site profile", () => {
     const root = document.createElement("div");
     root.innerHTML = extractPage(PAGE, site.homeUrl, site).html;
     const texts = collectSegments(root).map((element) => element.textContent);
-    expect(texts).toEqual(["Sample", "Call main to start.", "See Other."]);
+    // 畳めるコードの名前 (summary) は, 翻訳する
+    expect(texts).toEqual(["Sample", "Call main to start.", "Example solution", "See Other."]);
+  });
+
+  it("keeps the keywords in the headings and the task names, but not the plain words", () => {
+    const html = `<html><body><article class="article"><h2>If</h2><h3>For loops</h3>
+<h3>Other uses of when</h3><h3>Break and continue in loops</h3><h2>Kotlin for servers</h2>
+<h3>When you start</h3><dl><dt data-expandable="true">Count apples using while and do-while loops</dt>
+<dd><p>Use if here.</p></dd></dl></article></body></html>`;
+    const root = document.createElement("div");
+    root.innerHTML = extractPage(html, site.homeUrl, site).html;
+    const kept = Array.from(root.querySelectorAll("span.notranslate")).map(
+      (span) => span.textContent,
+    );
+    expect(kept).toEqual(["If", "For", "when", "Break", "continue", "while", "do-while"]);
+    const leads = Array.from(root.querySelectorAll("[data-zd-lead]")).map(
+      (element) => element.tagName,
+    );
+    expect(leads).toEqual(["H2", "H3", "H3"]);
   });
 
   it("reads the current Kotlin version to separate the cache", () => {
