@@ -23,7 +23,7 @@ const FOLLOWERS =
  * 本文は .main-content) を開く (タブは使わない. メニューは, ドキュメントの目次).
  */
 export const site: SiteProfile = {
-  name: "Kotlin Doc",
+  name: "Kotlin Doc Trans",
   host: "kotlinlang.org",
   pathPrefix: "/docs/",
   // 標準ライブラリの API (`/api/`. Dokka で作られている) も、アプリの中で開く (ドキュメントのリンクから入る).

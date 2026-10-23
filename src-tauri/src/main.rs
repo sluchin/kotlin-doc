@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    kotlin_doc_lib::run()
+    kotlin_doc_trans_lib::run()
 }

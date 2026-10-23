@@ -2131,7 +2131,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kotlin-doc"
+name = "kotlin-doc-trans"
 version = "0.1.0"
 dependencies = [
  "doc-translator-core",

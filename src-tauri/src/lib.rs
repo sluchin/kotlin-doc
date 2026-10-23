@@ -10,7 +10,7 @@ use doc_translator_core::Site;
 const SITE: Site = Site {
     host: "kotlinlang.org",
     alt_host: None,
-    user_agent: "kotlin-doc/0.1 (+https://github.com/sluchin/kotlin-doc)",
+    user_agent: "kotlin-doc-trans/0.1 (+https://github.com/sluchin/kotlin-doc-trans)",
 };
 
 /// アプリを起動する.

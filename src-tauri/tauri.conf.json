@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Kotlin Doc",
+  "productName": "Kotlin Doc Trans",
   "version": "0.1.0",
-  "identifier": "jp.sluchin.kotlindoc",
+  "identifier": "jp.doctranslator.kotlindoctrans",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Kotlin Doc",
+        "title": "Kotlin Doc Trans",
         "width": 1000,
         "height": 800
       }
